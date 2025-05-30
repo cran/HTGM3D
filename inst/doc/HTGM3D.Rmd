@@ -1,0 +1,136 @@
+---
+title: "Three Dimensional High Throughput GoMiner (HTGM3D)"
+author: Barry Zeeberg [aut, cre]
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Three Dimensional High Throughput GoMiner (HTGM3D)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+body {
+text-align: justify;
+font-size: 16pt;
+font-family: Times;}
+</style>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif;
+color:red'>Three Dimensional High Throughput GoMiner (HTGM3D)<o:p></o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'><o:p>&nbsp;</o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>Barry
+Zeeberg<o:p></o:p></span></b></p>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>barryz2013@gmail.com<o:p></o:p></span></b></p><br>
+
+<p class=MsoNormal style='text-align:justify'><span style='font-size:16.0pt;
+font-family:"Times New Roman",serif'></p><br>
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>Motivation<o:p></o:p></span></b></p>
+
+
+‘Three Dimensional High Throughput GoMiner (HTGM3D)’ is the final package of the five CRAN packages that together comprise the GoMiner suite. The other four are  ‘minimalistGODB,’ ‘GoMiner,’ ‘High Throughput GoMiner (HTGM),' and ‘Two Dimensional High Throughput GoMiner (HTGM2D)’
+
+The relationships between the functions in this set of packages can be shown using the package 'foodwebWrapper'.
+
+![The calling functions are designated along the column on the left](Figure5.jpg){width=125%}
+The calling functions are designated along the column on the left
+<br><br>
+
+The Gene Ontology (GO) Consortium <https://geneontology.org/> organizes genes into hierarchical categories based on biological process (BP), molecular function (MF) and cellular component (CC, i.e., subcellular localization). Tools such as GoMiner (see Zeeberg, B.R., Feng, W., Wang, G. et al. (2003) <doi:10.1186/gb-2003-4-4-r28>) can leverage GO to perform ontological analysis of microarray and proteomics studies, typically generating a list of significant functional categories. Microarray studies are usually analyzed with BP (Figure 2), whereas proteomics researchers often prefer CC (Figure 3).
+<br><br>
+![Figure 2. GoMiner BP heatmap for cluster52 gene list](Figure1.jpg){width=175%}
+Figure 2. GoMiner BP heatmap for cluster52 gene list
+<br><br><br>
+![Figure 3.  GoMiner CC heatmap for cluster52 gene list](Figure2.jpg){width=150%}
+Figure 3.  GoMiner CC heatmap for cluster52 gene list
+<br><br>
+To capture the benefit of both of those ontologies simultaneously, I had developed a two-dimensional version of High-Throughput GoMiner (HTGM2D). I generate a 2D heat map whose axes are any two of BP, MF, or CC, and the value within a picture element of the heat map reflects the Jaccard metric p-value for the number of genes in common for the corresponding ontology pair (Figure 4).
+<br><br>
+![Figure 4. HTGM2D BP versus CC heatmap (containing clickable hyperlinks to reveal hidden gene lists) for cluster52 gene list](Figure3.jpg){width=100%}
+Figure 4. HTGM2D BP versus CC heatmap (containing clickable hyperlinks to reveal hidden gene lists) for cluster52 gene list
+<br><br>
+I had been under the impression that HTGM2D would be the final version. It seems to provide substantial additional insight into the biological relationships underlying a gene set, compared with the original GoMiner or HTGM.
+
+More or less as a thought experiment, I was imagining how one would extend HTGM2D to a three dimensional version. After all, there are three branches of the Gene Ontology, so it seemed like a natural idea. But the Jaccard metric, which I had used for HTGM2D, seemed to be inherently limited to two dimensions - I could not find any theoretical discussion or implementation that would apply to three dimensions. And I had trouble imagining how to graphically present the (hypothetical) three dimensional version.
+
+It seemed that in principle I could extend the Jaccard idea to three dimensions, simply by counting how many genes are in common in any triple of categories drawn from each of the three ontology branches. It was not at all clear to me that there would ever be a substantial number of genes in common in three categories, but I was pleasantly surprised to see this did occur.
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>HTGM3D<o:p></o:p></span></b></p>
+
+The HTGM3D study was invoked by
+```
+load("~/GODB_RDATA/GOGOA3.RData")
+dir<-tempdir()
+geneList<-cluster52
+mat3d<-HTGM3Ddriver(dir,geneList,GOGOA3,nrand=1)
+```
+
+Columns 'n1','n2','n3' in Figure 5 show substantial numbers of genes mapping to individual categories in the three ontologies, and column 'lint' shows substantial numbers of genes in the three-way intersection. This was in stark contrast to randomized controls (not shown). In fact, the randomized results are so anemic that I decided to forgo a statistical analysis, and just take the real data at face value.
+
+![Figure 5. mat3d](FigureG1.jpg){width=200%}
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>The Fun Part: 3D Graphics<o:p></o:p></span></b></p>
+
+After rejecting many imaginative but impractical approaches to the graphics, I came upon a package 'rgl' that had very nice three dimensional scatter plots, with facilities to interact with the plots. This turned out to provide a fairly complete solution.
+
+The graphics program is invoked (Figure 6) by
+```
+interactWithGraph3D(l3$mat3d)
+```
+![Figure 6. HTGM3D 3D graphic for cluster52 gene list](FigureG2.jpg){width=100%}
+
+Upon invoking the program, the function *plot3d()* is called first, and the user can rotate the image as much as desired. A menu will appear in the R Console that allows the user to interactively select a point, or specify a row number within mat3d (see Figure 5) that provides an alternative way to select a point. Either way, annotations will appear on the 3d graph, and a list of common genes mapping to the categories of that triplet will appear (not shown).
+
+![Figure 7. Annotated HTGM3D 3D graphic for cluster52 gene list](FigureG3.jpg){width=100%}
+Figure 7. Annotated HTGM3D 3D graphic for cluster52 gene list
+<br><br>
+![Figure 8. Information about the selected triplet](FigureG4.jpg){width=50%}
+<br>
+Figure 8. Information about the selected triplet
+<br><br>
+
+You can add one or two more annotations, but the graphic tends to become cluttered if you add too many.
+
+You can subsequently over write the graphic using
+```
+interactWithGraph3D(l3$mat3d,newWindow=FALSE)
+
+```
+or retain the graphic and start working in a new window using
+```
+interactWithGraph3D(l3$mat3d,newWindow=TRUE)
+```
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>Nitty Gritty<o:p></o:p></span></b></p>
+
+Each point represents one triplet of categories (one each from "molecular_function", "cellular_component", "biological_process"). The triplet is characterized by the number of genes in the intersection of the three categories. The intersection is given in the column 'lint' in Figure 5. For instance, one of the bright red points corresponds to the high 'lint' value given in the first line of Figure 5. That is, the three categories of this triplet contain 42, 15, and 11 genes, of which 8 are in common.
+
+*Each triplet may be assigned any (x,y,z) in an entirely arbitrary manner, as long as no two triplets are assigned the same (x,y,z). This is the basis that allows us to perform a meaningful visualization. One thing that is not arbitrary is the fundamental principle that the triplet must remain associated with its proper 'lint' value.*
+
+Each triplet is assigned a Cartesian coordinate (x, y, z) in the following manner: All categories within, say "molecular_function" are sorted with respect to how many triplets it is associated with (Figure 9). The highest category is given x = 1, and so forth. That way, the triplets closer to (1, 1, 1) are the 'heavy hitters' that we might want to focus on. Figure 9 shows that GO:000515, being associated with a whopping 38 triplets, is the heavy hitter within "molecular_function."
+
+*That "molecular_function" category GO:000515 will always have coordinate 1 within all of its triplets (see column 'x' in Figure 5). The coordinate x = 1 defines the locus of a plane within the graphic, so that all triplets containing GO:000515 will lie within the x = 1 plane.*
+<br><br>
+
+![Figure 9. Frequency of Appearance of Each Category in Triplets](FigureG6.jpg){width=175%}
+
+In addition to the position within the 3D graphic, each triplet is also associated with a color that reflects the "lint" value (*i.e.*, the number of genes in the intersection for that triplet). Bright red reflects the highest, orange is middle of the road, yellow is the low end (Figures 6, 7).
+
+<p class=MsoNormal align=center style='text-align:center'><b style='mso-bidi-font-weight:
+normal'><span style='font-size:16.0pt;font-family:"Times New Roman",serif'>Exercise for the Student<o:p></o:p></span></b></p>
+
+Run the example for *interactWithGraph3D()*. Click on any point, to bring up its annotation. You can rotate the graphic if needed, and you should be able to see that the point in fact is in the position given by the annotation that is like Figure 8. The annotations for the position and category names should match those given in the Safari rendering of mat3D (like Figure 5).
