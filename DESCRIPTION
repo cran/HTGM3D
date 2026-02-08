@@ -1,6 +1,6 @@
 Package: HTGM3D
-Version: 1.0
-Date: 2025-05-27
+Version: 1.0.1
+Date: 2026-02-07
 Title: Three Dimensional High Throughput 'GoMiner'
 Authors@R: c(
           person("Barry", "Zeeberg", email = "barryz2013@gmail.com",
@@ -9,7 +9,7 @@ Maintainer: Barry Zeeberg <barryz2013@gmail.com>
 Author: Barry Zeeberg [aut, cre]
 Depends: R (>= 4.2.0)
 Imports: minimalistGODB, GoMiner, HTGM, HTGM2D, grDevices, stats,
-        R2HTML, rgl, vprint, randomGODB, stringr
+        R2HTML, rgl, vprint, randomGODB, stringr, salesforcer
 LazyData: true
 LazyDataCompression: xz
 Description: The Gene Ontology (GO) Consortium <https://geneontology.org/> organizes genes
@@ -23,9 +23,9 @@ License: GPL (>= 2)
 Encoding: UTF-8
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2025-05-28 03:29:58 UTC; barryzeeberg
+Packaged: 2026-02-07 23:00:07 UTC; barryzeeberg
 Repository: CRAN
-Date/Publication: 2025-05-30 09:10:05 UTC
+Date/Publication: 2026-02-08 10:50:15 UTC

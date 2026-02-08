@@ -16,7 +16,7 @@ interactWithGraph3D(mat3d, maxfract = 1, newWindow = TRUE, verbose = TRUE)
 \item{verbose}{integer vector representing vprint classes}
 }
 \value{
-returns no value, but has side effect of annotating the 3D graph
+returns -1 if OS is OSX 26.2 which has glitch with rgl package
 }
 \description{
 rotate the 3d graph and/or select a point within the 3D graph, and annotate that point

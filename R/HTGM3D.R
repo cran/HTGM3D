@@ -105,27 +105,27 @@ HTGM3Ddriver<-
     l[[names(GOGOA3$ontologies)[2]]]<-sort(table(mat[,"cat2"]),decreasing=TRUE)
     l[[names(GOGOA3$ontologies)[3]]]<-sort(table(mat[,"cat3"]),decreasing=TRUE)
     
-      vprint(4,verbose,"Frequency of Appearance of Each Category in Joint Histogram:")
-      for(i in 1:3) {
-        vprint(4,verbose,names(GOGOA3$ontologies)[i])
-        vprint(4,verbose,sort(l[[i]],decreasing=TRUE))
-      }
+    vprint(4,verbose,"Frequency of Appearance of Each Category in Joint Histogram:")
+    for(i in 1:3) {
+      vprint(4,verbose,names(GOGOA3$ontologies)[i])
+      vprint(4,verbose,sort(l[[i]],decreasing=TRUE))
+    }
     
     # list l2 contains the axis coordinate number to be used for the plotting order for each category
     #x_l<-l
     #save(x_l,file="data/x_l.RData")
     l2<-catNum3(l)
-
-      vprint(4,verbose,"Axis Coordinate Number for the Plotting Order of each Category per Ontology:")
-      for(i in 1:3) {
-        vprint(4,verbose,names(GOGOA3$ontologies)[i])
-        vprint(4,verbose,l2[[i]])
-      }
+    
+    vprint(4,verbose,"Axis Coordinate Number for the Plotting Order of each Category per Ontology:")
+    for(i in 1:3) {
+      vprint(4,verbose,names(GOGOA3$ontologies)[i])
+      vprint(4,verbose,l2[[i]])
+    }
     
     #x_mat<-mat
     #save(x_mat,file="data/x_mat.RData")
     # re-number categories to show up in 3D plot in meaningful order
-
+    
     mat3d<-plot3Dmat(mat,l2)
     
     # more informative colnames for mat3d
@@ -140,7 +140,7 @@ HTGM3Ddriver<-
     colnames(mat3d2)<-c('#',colnames(mat3d))
     rownames(mat3d2)<-NULL
     HTML(mat3d2,file=f)
-
+    
     sys<-sprintf("open -a Safari.app %s",f)
     system(sys)
     
@@ -152,9 +152,9 @@ HTGM3Ddriver<-
     #save(x_mat3d,file="data/x_mat3d.RData")
     save(l3,file=sprintf("%s/l3.RData",subd))
     
-      vprint(1,verbose,"Summary spreadsheet should already be open for you in Safari browser")
-      vprint(1,verbose,"You can use super cool interative 3D visualization by copy and paste into R Console:")
-      vprint(1,verbose,"interactWithGraph3D(l3$mat3d)")
+    vprint(1,verbose,"Summary spreadsheet should already be open for you in Safari browser")
+    vprint(1,verbose,"You can use super cool interative 3D visualization by copy and paste into R Console:")
+    vprint(1,verbose,"interactWithGraph3D(l3$mat3d)")
     
     return(l3)
   }
@@ -185,7 +185,7 @@ HTGM3Ddriver<-
 catNum3<-
   function(l) {
     l1<-list()
-  
+    
     for(i in names(l)) {
       v<-1:length(l[[i]])
       names(v)<-names(l[[i]])
@@ -239,14 +239,14 @@ HTGM3D<-
       m[[ontology]]<-catGenes(geneList,GOGOA3,ontology)
       vprint(4,verbose,"HTGM3D after catGenes - cats matching gene list")
       vprint(4,verbose,dim(m[[ontology]]))
-
+      
       #x_cg<-catGenes(geneList,GOGOA3,ontology)
       #save(x_cg,file="data/x_cg.RData")
       m[[ontology]]<-pruneCatGenes(catGenes(geneList,GOGOA3,ontology),pcgMN,pcgMX)
       vprint(4,verbose,"HTGM3D after catGenes AND pruneCatGenes - cats matching gene list")
       vprint(4,verbose,c(mn,mx))
       vprint(4,verbose,dim(m[[ontology]]))
-
+      
       #x_m11<-m
       #save(x_m11,file="data/x_m11.RData")
     }
@@ -258,7 +258,7 @@ HTGM3D<-
     }
     
     mat<-insertCatSize(mat,GOGOA3)
-  
+    
     #x_jmat<-mat
     #save(x_jmat,file="data/x_jmat.RData")
     
@@ -432,11 +432,13 @@ blackBodyRadiationColors<-
 #' interactWithGraph3D(x_mat3d)
 #' }
 #' 
-#' @return returns no value, but has side effect of annotating the 3D graph
+#' @return returns -1 if OS is OSX 26.2 which has glitch with rgl package
 #' 
 #' @export 
 interactWithGraph3D<-
   function(mat3d,maxfract=1.00,newWindow=TRUE,verbose=TRUE) {
+    if(whichOS()=="BAD")
+      OS<-"BAD"
     
     range<-list()
     range$x<-range(as.numeric(mat3d[,"x"]))
@@ -459,6 +461,7 @@ interactWithGraph3D<-
     # cannot use on.exit(), must be performed explicitly upon user entering 'x'
     par3d("windowRect"=c(50,50,1000,1000)) # adjust position and size of plot3d window
     
+    if(OS=="OK"){
     ids<-plot3d(mat3d[,c("x","y","z")],xlab="molecular_function",ylab="cellular_component",
                 zlab="biological_process",col=colors.blackBody[as.integer(lcb*as.integer(mat3d[,"col"])/mx)],size=10)
     
@@ -495,6 +498,14 @@ interactWithGraph3D<-
       }
       
       next
+    }
+    }
+    else{ # if(OS=="BAD") just bare bones, bypass interactive options
+      print("glitch with rgl package in mac os Tahoe 26.2, just bare bones, bypass extra interactive options")
+      print("3D will come up in web browser rather than in quartz window")
+      print("I will restore full functionality when developers fix the gitch")
+      plot3d(mat3d[,c("x","y","z")],xlab="molecular_function",ylab="cellular_component",
+             zlab="biological_process",col=colors.blackBody[as.integer(lcb*as.integer(mat3d[,"col"])/mx)],size=10)
     }
   }
 
@@ -643,7 +654,7 @@ subMatDiffs<-
     if(lw>0) {
       vprint(3,verbose,"differences in submatrices:")
       vprint(3,verbose,w)
-   
+      
       for(i in 1:nrow(w)) {
         r<-rn[w[i,"row"]]
         c<-cn[w[i,"col"]]
@@ -653,6 +664,29 @@ subMatDiffs<-
     
     tot<-length(rn)*length(cn)
     vprint(3,verbose,c("summary: tot same diff: ",tot,tot-lw,lw))
+  }
+
+#' whichOS
+#' 
+#' @import salesforcer
+#' 
+#' @description determine if host machine is running OSX Tahoe 26.2
+#' 
+#' @details
+#' as of Feb 6 2026 Tahoe 26.2 does not interact properly with rgl Xwindows package
+#' 
+#' @returns "BAD" Tahoe 26.2, "OK" otherwise
+#' 
+#' @export
+whichOS<-
+  function() {
+    if(salesforcer::get_os()=="osx") {
+      output <- system("sw_vers", intern = TRUE)
+      ss<-strsplit(output[2],"\t\t")
+      if(ss[[1]][2]=="26.2")
+        return("BAD")
+    }
+    return("OK")
   }
 
 
