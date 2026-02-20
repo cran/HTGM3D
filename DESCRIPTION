@@ -1,6 +1,6 @@
 Package: HTGM3D
-Version: 1.0.1
-Date: 2026-02-07
+Version: 1.0.2
+Date: 2026-02-19
 Title: Three Dimensional High Throughput 'GoMiner'
 Authors@R: c(
           person("Barry", "Zeeberg", email = "barryz2013@gmail.com",
@@ -26,6 +26,6 @@ Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2026-02-07 23:00:07 UTC; barryzeeberg
+Packaged: 2026-02-20 17:23:42 UTC; barryzeeberg
 Repository: CRAN
-Date/Publication: 2026-02-08 10:50:15 UTC
+Date/Publication: 2026-02-20 17:50:02 UTC

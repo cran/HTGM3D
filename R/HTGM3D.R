@@ -437,8 +437,8 @@ blackBodyRadiationColors<-
 #' @export 
 interactWithGraph3D<-
   function(mat3d,maxfract=1.00,newWindow=TRUE,verbose=TRUE) {
-    if(whichOS()=="BAD")
-      OS<-"BAD"
+    
+    OS<-whichOS()
     
     range<-list()
     range$x<-range(as.numeric(mat3d[,"x"]))
@@ -500,12 +500,15 @@ interactWithGraph3D<-
       next
     }
     }
-    else{ # if(OS=="BAD") just bare bones, bypass interactive options
+    else if(OS=="BAD") { # just bare bones os 26.2, bypass interactive options
       print("glitch with rgl package in mac os Tahoe 26.2, just bare bones, bypass extra interactive options")
       print("3D will come up in web browser rather than in quartz window")
       print("I will restore full functionality when developers fix the gitch")
       plot3d(mat3d[,c("x","y","z")],xlab="molecular_function",ylab="cellular_component",
              zlab="biological_process",col=colors.blackBody[as.integer(lcb*as.integer(mat3d[,"col"])/mx)],size=10)
+    }
+    else { #total failure for os 26.3
+      print("glitch with rgl package in mac os Tahoe 26.3, aborting until system developers fix")
     }
   }
 
@@ -685,6 +688,8 @@ whichOS<-
       ss<-strsplit(output[2],"\t\t")
       if(ss[[1]][2]=="26.2")
         return("BAD")
+      if(ss[[1]][2]=="26.3")
+        return("REALBAD")
     }
     return("OK")
   }
